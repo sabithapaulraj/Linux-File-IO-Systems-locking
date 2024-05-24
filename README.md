@@ -21,19 +21,41 @@ Execute the C Program for the desired output.
 
 ## 1.To Write a C program that illustrates files copying 
 ```
-include <sys/stat.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
-int main()
-{
-char block[1024];
-int in, out;
-int nread;
-in = open("filecopy.c", O_RDONLY);
-out = open("file.out", O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
-while((nread = read(in,block,sizeof(block))) > 0)
-write(out,block,nread);
-exit(0);}
+#include <unistd.h> 
+#include <stdio.h>  
+
+int main() {
+    char block[1024];
+    int in, out;
+    int nread;
+    in = open("filecopy.c", O_RDONLY);
+    if (in == -1) {
+        perror("Error opening filecopy.c");
+        exit(EXIT_FAILURE);
+    }
+    out = open("file.out", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    if (out == -1) {
+        perror("Error opening file.out");
+        close(in);
+        exit(EXIT_FAILURE);
+    }
+    while ((nread = read(in, block, sizeof(block))) > 0) {
+        if (write(out, block, nread) != nread) {
+            perror("Error writing to file.out");
+            close(in);
+            close(out);
+            exit(EXIT_FAILURE);
+        }
+    }
+    close(in);
+    close(out);
+
+    exit(EXIT_SUCCESS);
+}
+
 ```
 
 
@@ -87,12 +109,16 @@ return 0;
 
 ## C program that illustrates files copying
 
-![image](https://github.com/sabithapaulraj/Linux-File-IO-Systems-locking/assets/118343379/3f458eaa-76b8-4625-b729-629030fcff4a)
+![image](https://github.com/sabithapaulraj/Linux-File-IO-Systems-locking/assets/118343379/5a7a50f5-6ef5-4758-a1d8-02f62195812a)
+
 
 
 ## C program that illustrates files locking
+![image](https://github.com/sabithapaulraj/Linux-File-IO-Systems-locking/assets/118343379/8bd471e3-ab1e-44cd-acf0-02ef58195252)
+![image](https://github.com/sabithapaulraj/Linux-File-IO-Systems-locking/assets/118343379/c6bf6ada-c220-418d-9a58-d570a1ca628e)
 
-![image](https://github.com/sabithapaulraj/Linux-File-IO-Systems-locking/assets/118343379/16848c5e-ad93-40d8-8f7c-7a03e66d238b)
+
+
 
 
 # RESULT:
